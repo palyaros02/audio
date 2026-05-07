@@ -91,7 +91,8 @@ Options:
 --model TEXT      OpenRouter TTS model. Default: google/gemini-3.1-flash-tts-preview
 --voice TEXT      Voice to use. Default: Zephyr for Gemini, alloy for OpenAI TTS
 --out TEXT        Output audio path. Default: speech.ogg
---format FORMAT   Output format: ogg or mp3. Inferred from --out when omitted
+--format FORMAT   Output format: ogg or mp3. Inferred from --out when omitted;
+                  when set, --out extension is adjusted to match
 --timeout FLOAT   HTTP timeout in seconds. Default: 120
 ```
 

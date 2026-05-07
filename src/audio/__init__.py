@@ -157,7 +157,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     tts_parser.add_argument(
         "--format",
         choices=("ogg", "mp3"),
-        help="Output format. Inferred from --out when omitted; defaults to ogg.",
+        help="Output format. Inferred from --out when omitted; adjusts --out extension when set.",
     )
     tts_parser.add_argument(
         "--timeout",
@@ -344,6 +344,16 @@ def infer_tts_format(output_path: Path, requested_format: str | None) -> str:
     raise AudioError("TTS output format must be ogg or mp3. Use --format to choose one.")
 
 
+def resolve_tts_output_path(output_path: Path, output_format: str, requested_format: str | None) -> Path:
+    if not requested_format:
+        return output_path
+
+    suffix = output_path.suffix.lower().lstrip(".")
+    if suffix == output_format:
+        return output_path
+    return output_path.with_suffix(f".{output_format}")
+
+
 def tts_requires_mp3(exc: APIError) -> bool:
     message = exc.message.lower()
     return "response_format" in message and "mp3" in message and "pcm" in message
@@ -419,6 +429,7 @@ def tts(text_parts: list[str], model: str, voice: str | None, output: str, outpu
     validate_tts_model(model)
     normalized_voice = normalize_voice(model, voice)
     resolved_format = infer_tts_format(output_path, output_format)
+    output_path = resolve_tts_output_path(output_path, resolved_format, output_format)
     with tempfile.TemporaryDirectory(prefix="audio-tts-") as temp_dir:
         generated_path = Path(temp_dir) / "speech.audio"
         generated_format = synthesize_audio_to_file(
