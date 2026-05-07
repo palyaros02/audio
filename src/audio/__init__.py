@@ -413,6 +413,7 @@ def convert_audio(input_path: Path, input_format: str, output_path: Path, output
         command.extend(["-c:a", "libmp3lame"])
     else:
         raise AudioError(f"Unsupported TTS output format: {output_format}")
+    command.extend(["-f", output_format])
     command.append(str(output_path))
 
     try:

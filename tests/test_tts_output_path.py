@@ -28,6 +28,13 @@ class TtsOutputPathTests(unittest.TestCase):
 
         self.assertEqual(output_path, Path("test.mp3"))
 
+    def test_convert_audio_forces_muxer_from_output_format(self) -> None:
+        with patch("audio.subprocess.run") as run:
+            audio.convert_audio(Path("input.audio"), audio.TTS_PCM_FORMAT, Path("test.mp3"), "ogg")
+
+        command = run.call_args.args[0]
+        self.assertEqual(command[-3:], ["-f", "ogg", "test.mp3"])
+
 
 if __name__ == "__main__":
     unittest.main()
