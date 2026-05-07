@@ -1,0 +1,20 @@
+[project]
+name = "audio"
+version = "0.1.0"
+description = "OpenRouter audio transcription and TTS CLI"
+readme = "README.md"
+authors = [
+    { name = "Yaroslav Palamarchuk", email = "palyaros02@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "openai>=2.10.0",
+    "python-dotenv>=1.2.2",
+]
+
+[project.scripts]
+audio = "audio:main"
+
+[build-system]
+requires = ["uv_build>=0.9.26,<0.10.0"]
+build-backend = "uv_build"
